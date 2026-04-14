@@ -1,0 +1,432 @@
+body{
+font-family:'Inter',sans-serif;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+margin:0;
+padding:40px;
+display:flex;
+flex-direction:column;
+align-items:center;
+min-height:100vh;
+color:white;
+}
+
+/* LOGO */
+
+h1{
+
+font-family:'Montserrat',sans-serif;
+font-size:40px;
+letter-spacing:2px;
+margin-bottom:30px;
+
+background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+-webkit-background-clip:text;
+color:transparent;
+
+}
+
+/* MENU */
+
+.menu{
+
+display:flex;
+gap:12px;
+margin-bottom:25px;
+flex-wrap:wrap;
+
+}
+
+.menu button{
+
+background:#111827;
+border:1px solid #374151;
+color:white;
+padding:10px 18px;
+border-radius:8px;
+cursor:pointer;
+font-weight:500;
+transition:0.25s;
+
+}
+
+.menu button:hover{
+
+background:linear-gradient(90deg,#2563eb,#7c3aed);
+border-color:transparent;
+transform:translateY(-2px);
+
+}
+
+/* CONTENEDORES */
+
+#addSection,
+#listSection,
+#practiceArea,
+#examArea{
+
+background:#111827;
+border:1px solid #374151;
+border-radius:14px;
+padding:28px;
+width:100%;
+max-width:720px;
+
+box-shadow:
+0 15px 40px rgba(0,0,0,0.6),
+0 0 30px rgba(99,102,241,0.15);
+
+}
+
+/* INPUTS */
+
+input,textarea{
+
+width:100%;
+padding:11px 12px;
+border-radius:8px;
+border:1px solid #374151;
+margin-bottom:12px;
+background:#020617;
+color:white;
+
+}
+
+input:focus,
+textarea:focus{
+
+outline:none;
+border-color:#3b82f6;
+
+}
+
+/* BOTONES */
+
+button{
+
+background:linear-gradient(90deg,#2563eb,#7c3aed);
+border:none;
+color:white;
+padding:10px 16px;
+border-radius:8px;
+cursor:pointer;
+font-weight:500;
+transition:0.25s;
+
+}
+
+button:hover{
+
+transform:translateY(-2px);
+box-shadow:0 5px 20px rgba(99,102,241,0.4);
+
+}
+
+/* TARJETAS */
+
+.card{
+
+border:1px solid #374151;
+border-radius:12px;
+padding:18px;
+margin-bottom:14px;
+background:#020617;
+
+transition:0.25s;
+
+}
+
+.card:hover{
+
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(0,0,0,0.5);
+
+}
+
+/* PALABRA PRACTICA */
+
+#practiceWord{
+
+font-size:34px;
+font-family:'Montserrat',sans-serif;
+margin-bottom:12px;
+color:#f1f5f9;
+
+}
+
+/* PALABRA EXAMEN */
+
+#examWord{
+
+font-size:32px;
+font-family:'Montserrat',sans-serif;
+
+}
+
+/* RESULTADOS */
+
+#examResult{
+
+margin-top:10px;
+font-weight:600;
+
+}
+
+#pronunciationResult{
+
+margin-top:10px;
+color:#cbd5f5;
+
+}
+
+/* ESTADISTICAS */
+
+#stats{
+
+margin-top:14px;
+background:#020617;
+padding:12px;
+border-radius:8px;
+font-size:14px;
+border:1px solid #374151;
+
+}
+
+/* PROGRESS BAR */
+
+#progressBar{
+
+background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+height:100%;
+border-radius:10px;
+transition:width 0.4s;
+
+}
+
+/* AUDIO */
+
+audio{
+
+width:100%;
+margin-top:10px;
+
+}
+
+/* APP LAYOUT */
+
+.app{
+
+display:flex;
+width:100%;
+height:100vh;
+
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+width:230px;
+background:#020617;
+border-right:1px solid #374151;
+
+padding:30px 20px;
+
+display:flex;
+flex-direction:column;
+gap:12px;
+
+}
+
+/* LOGO */
+
+.logo{
+
+font-family:'Montserrat',sans-serif;
+font-size:26px;
+margin-bottom:25px;
+
+background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+-webkit-background-clip:text;
+color:transparent;
+
+}
+
+/* BOTONES SIDEBAR */
+
+.sidebar button{
+
+background:#111827;
+border:1px solid #374151;
+color:white;
+
+padding:10px;
+border-radius:8px;
+
+text-align:left;
+cursor:pointer;
+
+transition:0.2s;
+
+}
+
+.sidebar button:hover{
+
+background:linear-gradient(90deg,#2563eb,#7c3aed);
+transform:translateX(3px);
+
+}
+
+/* CONTENIDO */
+
+.content{
+
+flex:1;
+padding:40px;
+
+display:flex;
+justify-content:center;
+align-items:flex-start;
+
+overflow:auto;
+
+}
+
+button{
+
+background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+border:none;
+padding:12px 18px;
+border-radius:8px;
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:0.2s;
+
+}
+
+button:hover{
+
+transform:translateY(-2px);
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+
+}
+
+.card{
+
+background:#0f172a;
+border-radius:12px;
+padding:20px;
+margin-bottom:15px;
+border:1px solid rgba(255,255,255,0.08);
+
+}
+
+.app-header{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:30px;
+}
+
+.logo{
+    width:60px;
+    height:60px;
+    object-fit:cover;
+    border-radius:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
+.app-header h1{
+    margin:0;
+    font-size:2rem;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+/* =========================
+   RESPONSIVE MOBILE FIX
+========================= */
+@media (max-width: 900px){
+
+    body{
+        padding:0;
+        margin:0;
+        overflow-x:hidden;
+    }
+
+    .app{
+        flex-direction:column;
+        width:100%;
+        min-height:100vh;
+    }
+
+    .sidebar{
+        width:100%;
+        padding:20px 15px;
+        border-right:none;
+        border-bottom:1px solid #374151;
+    }
+
+    .app-header{
+        justify-content:center;
+        text-align:center;
+        flex-direction:column;
+        gap:10px;
+        margin-bottom:20px;
+    }
+
+    .logo{
+        width:55px;
+        height:55px;
+    }
+
+    .app-header h1{
+        font-size:1.9rem;
+        line-height:1.2;
+    }
+
+    .menu{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+        width:100%;
+    }
+
+    .menu button{
+        width:100%;
+        padding:14px;
+        font-size:14px;
+    }
+
+    .content{
+        width:100%;
+        padding:15px;
+        box-sizing:border-box;
+    }
+
+    #addSection,
+    #listSection,
+    #practiceArea,
+    #examArea,
+    .card{
+        width:100%;
+        max-width:100%;
+        padding:18px;
+        box-sizing:border-box;
+        border-radius:16px;
+    }
+
+    input,
+    textarea,
+    button{
+        width:100%;
+        box-sizing:border-box;
+        font-size:15px;
+    }
+
+    audio{
+        width:100%;
+    }
+
+}

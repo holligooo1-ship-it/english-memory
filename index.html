@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6D28D9">
+<link rel="apple-touch-icon" href="Icono 192.png">
+<meta charset="UTF-8">
+<title>English Memory</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="sidebar">
+
+<div class="app-header">
+    <img src="english memory logo.png" alt="English Memory Logo" class="logo">
+    <h1>English Memory</h1>
+</div>
+
+<button onclick="showAdd()">➕ Agregar</button>
+<button onclick="showList()">📚 Vocabulario</button>
+<button onclick="startPractice()">🧠 Practicar</button>
+<button onclick="startExam()">📝 Examen</button>
+
+</div>
+
+<div class="content">
+
+<!-- AGREGAR PALABRA -->
+<div id="addSection">
+
+<h2>Agregar frase o palabra</h2>
+
+<input id="phrase" placeholder="Frase o palabra en inglés">
+
+<input id="translation" placeholder="Traducciones (separadas por coma)">
+
+<input id="pronunciation" placeholder="Pronunciación">
+
+<br><br>
+
+<button onclick="startRecording()">🎤 Grabar pronunciación</button>
+<button onclick="stopRecording()">⏹ Detener</button>
+
+<br><br>
+
+<audio id="audioPlayback" controls></audio>
+
+<br><br>
+
+<textarea id="exampleEn" placeholder="Ejemplo en inglés"></textarea>
+
+<textarea id="exampleEs" placeholder="Ejemplo en español"></textarea>
+
+<textarea id="notes" placeholder="Notas"></textarea>
+
+<br><br>
+
+<button onclick="addWord()">Guardar</button>
+
+</div>
+
+
+<!-- LISTA DE VOCABULARIO -->
+<div id="listSection" style="display:none">
+
+<h2>Mi vocabulario</h2>
+
+<input id="search" placeholder="Buscar palabra..." onkeyup="searchWord()">
+
+<br><br>
+
+<div id="list"></div>
+
+</div>
+
+
+<!-- MODO PRACTICA -->
+<div id="practiceArea" style="display:none">
+
+<h2>Modo práctica</h2>
+
+<h3 id="practiceWord"></h3>
+
+<button onclick="speakWord()">🔊 Escuchar pronunciación</button>
+
+<button id="btnSpeakExample" onclick="speakExample()" style="display:none">
+🔊 Escuchar ejemplo
+</button>
+
+<br><br>
+
+<audio id="practiceAudio" controls></audio>
+
+<br><br>
+
+<button onclick="showAnswer()">Mostrar respuesta</button>
+
+<div id="answer" style="display:none">
+
+<p id="practiceTranslation"></p>
+
+<p id="practiceExample"></p>
+
+<!-- agregamos estos sin eliminar el anterior -->
+<p id="practiceExampleEn"></p>
+<p id="practiceExampleEs"></p>
+
+</div>
+
+<br><br>
+
+<button onclick="nextWord()">Siguiente palabra</button>
+
+</div>
+
+
+<!-- MODO EXAMEN -->
+<div id="examArea" style="display:none">
+
+<h2>Modo examen</h2>
+
+<p id="examCounter"></p>
+
+<div style="width:100%;background:#ddd;height:18px;border-radius:10px;margin:10px 0;">
+<div id="progressBar" style="width:0%;height:100%;background:#4CAF50;border-radius:10px;"></div>
+</div>
+
+<h3 id="examWord"></h3>
+
+<input id="examAnswer" placeholder="Escribe la respuesta">
+
+<br><br>
+
+<button onclick="checkExam()">Verificar</button>
+
+<button onclick="startPronunciationTest()">🎤 Hablar</button>
+
+<p id="examResult"></p>
+
+<p id="pronunciationResult"></p>
+
+<div id="stats" style="margin-top:20px;font-weight:bold;"></div>
+
+<br>
+
+<button onclick="nextExam()">Siguiente</button>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</div>
+</div>
+
+</body>
+</html>
