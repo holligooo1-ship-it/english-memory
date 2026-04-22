@@ -23,129 +23,98 @@ let examTotal = 0
 showWords()
 
 // =============================
+// FUNCION GLOBAL LIMPIEZA TEXTO (ÚNICA)
+// =============================
+function limpiarTexto(texto){
+return texto
+.toLowerCase()
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"")
+.replace(/[.,!?;:¿¡]/g,"")
+.trim()
+}
+
+// =============================
 // NAVEGACION
 // =============================
-
 function showAdd(){
-
 document.getElementById("addSection").style.display="block"
 document.getElementById("listSection").style.display="none"
 document.getElementById("practiceArea").style.display="none"
 document.getElementById("examArea").style.display="none"
-
 }
 
 function showList(){
-
 document.getElementById("addSection").style.display="none"
 document.getElementById("listSection").style.display="block"
 document.getElementById("practiceArea").style.display="none"
 document.getElementById("examArea").style.display="none"
-
 showWords()
-
 }
 
 // =============================
-// LIMPIAR FORM
-// =============================
-
 function clearForm(){
-
 document.getElementById("phrase").value=""
 document.getElementById("translation").value=""
 document.getElementById("pronunciation").value=""
 document.getElementById("exampleEn").value=""
 document.getElementById("exampleEs").value=""
 document.getElementById("notes").value=""
-
 document.getElementById("audioPlayback").src=""
-
 audioBase64=""
-
 }
 
 // =============================
-// GRABAR AUDIO
-// =============================
-
 async function startRecording(){
-
 try{
-
 let stream = await navigator.mediaDevices.getUserMedia({audio:true})
-
 mediaRecorder = new MediaRecorder(stream)
-
 audioChunks = []
 
-mediaRecorder.ondataavailable = event =>{
-audioChunks.push(event.data)
-}
+mediaRecorder.ondataavailable = e=> audioChunks.push(e.data)
 
 mediaRecorder.onstop = ()=>{
-
-let audioBlob = new Blob(audioChunks,{type:"audio/webm"})
-
+let blob = new Blob(audioChunks,{type:"audio/webm"})
 let reader = new FileReader()
 
-reader.readAsDataURL(audioBlob)
-
-reader.onloadend = function(){
-
+reader.readAsDataURL(blob)
+reader.onloadend = ()=>{
 audioBase64 = reader.result
 document.getElementById("audioPlayback").src = audioBase64
-
 }
 
-stream.getTracks().forEach(track => track.stop())
-
+stream.getTracks().forEach(t=>t.stop())
 }
 
 mediaRecorder.start()
 
-}catch(error){
-
+}catch{
 alert("No se pudo acceder al micrófono")
-
 }
-
 }
 
 function stopRecording(){
-
 if(mediaRecorder && mediaRecorder.state !== "inactive"){
 mediaRecorder.stop()
 }
-
 }
 
 // =============================
-// GUARDAR PALABRA
-// =============================
-
 function addWord(){
 
-let phrase = document.getElementById("phrase").value
-let translation = document.getElementById("translation").value
-let pronunciation = document.getElementById("pronunciation").value
-let exampleEn = document.getElementById("exampleEn").value
-let exampleEs = document.getElementById("exampleEs").value
-let notes = document.getElementById("notes").value
-
-if(phrase==="") return
-
 let word = {
-phrase,
-translation,
-pronunciation,
-exampleEn,
-exampleEs,
-notes,
+phrase: document.getElementById("phrase").value,
+translation: document.getElementById("translation").value,
+pronunciation: document.getElementById("pronunciation").value,
+exampleEn: document.getElementById("exampleEn").value,
+exampleEs: document.getElementById("exampleEs").value,
+notes: document.getElementById("notes").value,
 audio: audioBase64,
 correct:0,
 wrong:0
 }
+
+if(word.phrase==="") return
 
 if(editingIndex === -1){
 words.push(word)
@@ -155,16 +124,11 @@ editingIndex = -1
 }
 
 localStorage.setItem("words", JSON.stringify(words))
-
 showWords()
 clearForm()
-
 }
 
 // =============================
-// MOSTRAR LISTA
-// =============================
-
 function showWords(){
 
 let list = document.getElementById("list")
@@ -172,53 +136,34 @@ if(!list) return
 
 list.innerHTML=""
 
-words.forEach((w,index)=>{
-
+words.forEach((w,i)=>{
 list.innerHTML += `
-
 <div class="card">
-
 <h3>${w.phrase}</h3>
-
 <p><b>Traducción:</b> ${w.translation}</p>
 <p><b>Pronunciación:</b> ${w.pronunciation}</p>
 
-<p><b>Ejemplo:</b></p>
 <p>${w.exampleEn || ""}</p>
 <p>${w.exampleEs || ""}</p>
 
 ${w.audio ? `<audio controls src="${w.audio}"></audio>` : ""}
 
-<br><br>
-
-<button onclick="deleteWord(${index})">Eliminar</button>
-<button onclick="editWord(${index})">✏️ Editar</button>
-
-</div>
-
-`
-
+<button onclick="deleteWord(${i})">Eliminar</button>
+<button onclick="editWord(${i})">✏️ Editar</button>
+</div>`
 })
-
 }
 
 // =============================
-// EDITAR / ELIMINAR
-// =============================
-
-function deleteWord(index){
-
-words.splice(index,1)
-
+function deleteWord(i){
+words.splice(i,1)
 localStorage.setItem("words", JSON.stringify(words))
-
 showWords()
-
 }
 
-function editWord(index){
+function editWord(i){
 
-let w = words[index]
+let w = words[i]
 
 document.getElementById("phrase").value = w.phrase
 document.getElementById("translation").value = w.translation
@@ -226,450 +171,211 @@ document.getElementById("pronunciation").value = w.pronunciation
 document.getElementById("exampleEn").value = w.exampleEn
 document.getElementById("exampleEs").value = w.exampleEs
 document.getElementById("notes").value = w.notes
-
 document.getElementById("audioPlayback").src = w.audio || ""
 
 audioBase64 = w.audio || ""
-
-editingIndex = index
+editingIndex = i
 
 showAdd()
-
 }
 
 // =============================
-// BUSCAR
-// =============================
-
 function searchWord(){
 
 let search = document.getElementById("search").value.toLowerCase()
-
 let cards = document.querySelectorAll(".card")
 
 cards.forEach(card=>{
-
-let text = card.innerText.toLowerCase()
-
-card.style.display = text.includes(search) ? "block" : "none"
-
+card.style.display = card.innerText.toLowerCase().includes(search) ? "block":"none"
 })
-
 }
 
 // =============================
 // PRACTICA
 // =============================
-
 function startPractice(){
 
 if(words.length === 0){
-alert("No hay palabras para practicar")
+alert("No hay palabras")
 return
 }
 
-document.getElementById("addSection").style.display = "none"
-document.getElementById("listSection").style.display = "none"
-document.getElementById("examArea").style.display = "none"
-document.getElementById("practiceArea").style.display = "block"
+document.getElementById("addSection").style.display="none"
+document.getElementById("listSection").style.display="none"
+document.getElementById("examArea").style.display="none"
+document.getElementById("practiceArea").style.display="block"
 
 nextWord()
-
 }
 
 function nextWord(){
 
-document.getElementById("practiceWord").style.opacity = 0
+let w = words[Math.floor(Math.random()*words.length)]
+currentPracticeIndex = words.indexOf(w)
 
-setTimeout(()=>{
-document.getElementById("practiceWord").style.opacity = 1
-},200)
+document.getElementById("practiceWord").innerText = w.phrase
+document.getElementById("practiceTranslation").innerText = "Traducción: "+w.translation
+document.getElementById("practiceExampleEn").innerText = w.exampleEn || ""
+document.getElementById("practiceExampleEs").innerText = w.exampleEs || ""
+document.getElementById("practiceNotes").innerText = w.notes ? "📝 "+w.notes : ""
 
-let randomIndex = Math.floor(Math.random() * words.length)
-
-currentPracticeIndex = randomIndex
-
-let word = words[randomIndex]
-
-document.getElementById("practiceWord").innerText = word.phrase
-
-document.getElementById("practiceTranslation").innerText =
-"Traducción: " + word.translation
-
-document.getElementById("practiceExampleEn").innerText =
-word.exampleEn || ""
-
-document.getElementById("practiceExampleEs").innerText =
-word.exampleEs || ""
-
-let audioPlayer = document.getElementById("practiceAudio")
-
-if(word.audio){
-audioPlayer.src = word.audio
-audioPlayer.style.display = "block"
+let audio = document.getElementById("practiceAudio")
+if(w.audio){
+audio.src = w.audio
+audio.style.display="block"
 }else{
-audioPlayer.style.display = "none"
+audio.style.display="none"
 }
 
-document.getElementById("answer").style.display = "none"
-
+document.getElementById("answer").style.display="none"
 }
 
 function showAnswer(){
-
-document.getElementById("answer").style.display = "block"
-
-let example = words[currentPracticeIndex].exampleEn
-
-if(example && example.trim() !== ""){
-document.getElementById("btnSpeakExample").style.display = "inline-block"
-}else{
-document.getElementById("btnSpeakExample").style.display = "none"
-}
-
-}
-
-// 🔹 NUEVA FUNCION PARA GIRAR TARJETA
-
-function flipCard(){
-
-let card = document.getElementById("flashcard")
-
-card.classList.toggle("flip")
-
+document.getElementById("answer").style.display="block"
 }
 
 // =============================
-// PRONUNCIACION PRACTICA
-// =============================
-
 function speakWord(){
-
-let word = words[currentPracticeIndex].phrase
-
-let speech = new SpeechSynthesisUtterance(word)
-
-speech.lang = "en-US"
-
-speechSynthesis.cancel()
-speechSynthesis.speak(speech)
-
+let s = new SpeechSynthesisUtterance(words[currentPracticeIndex].phrase)
+s.lang="en-US"
+speechSynthesis.speak(s)
 }
 
 function speakExample(){
-
-let example = words[currentPracticeIndex].exampleEn
-
-if(!example) return
-
-let speech = new SpeechSynthesisUtterance(example)
-
-speech.lang = "en-US"
-
-speechSynthesis.cancel()
-speechSynthesis.speak(speech)
-
-}
-
-// =============================
-// PRONUNCIACION EXAMEN
-// =============================
-
-function startExamRecording(){
-
-let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
-
-recognition.lang = "en-US"
-
-recognition.start()
-
-recognition.onresult = function(event){
-
-let userSpeech = event.results[0][0].transcript
-
-let word = words[currentExamIndex].phrase
-
-// limpiar signos
-function limpiarTexto(texto){
-
-return texto
-.toLowerCase()
-.replace(/[.,!?;:¿¡]/g,"")
-.trim()
-
-}
-
-let correcto = limpiarTexto(userSpeech) === limpiarTexto(word)
-
-if(correcto){
-
-pronunciationCorrect++
-
-document.getElementById("pronunciationResult").innerHTML = "🎤 Pronunciación correcta"
-
-}else{
-
-pronunciationWrong++
-
-document.getElementById("pronunciationResult").innerHTML = "⚠️ Pronunciación incorrecta"
-
-}
-
-let total = pronunciationCorrect + pronunciationWrong
-
-let accuracy = Math.round((pronunciationCorrect/total)*100)
-
-document.getElementById("stats").innerHTML = `
-🎤 Pronunciación correcta: ${pronunciationCorrect} |
-⚠️ Pronunciación incorrecta: ${pronunciationWrong} |
-🎧 Precisión voz: ${accuracy}%
-`
-
-}
-
+let ex = words[currentPracticeIndex].exampleEn
+if(!ex) return
+let s = new SpeechSynthesisUtterance(ex)
+s.lang="en-US"
+speechSynthesis.speak(s)
 }
 
 // =============================
 // EXAMEN
 // =============================
-
 function startExam(){
 
-if(words.length === 0){
-alert("No hay palabras para examinar")
+if(words.length===0){
+alert("No hay palabras")
 return
 }
 
-document.getElementById("addSection").style.display = "none"
-document.getElementById("listSection").style.display = "none"
-document.getElementById("practiceArea").style.display = "none"
-document.getElementById("examArea").style.display = "block"
+document.getElementById("addSection").style.display="none"
+document.getElementById("listSection").style.display="none"
+document.getElementById("practiceArea").style.display="none"
+document.getElementById("examArea").style.display="block"
 
-examQuestion = 0
-examTotal = words.length
-
-totalCorrect = 0
-totalWrong = 0
-streak = 0
+examQuestion=0
+examTotal=words.length
+totalCorrect=0
+totalWrong=0
+streak=0
 
 nextExam()
-
 }
 
 function nextExam(){
 
-if(examQuestion >= examTotal){
-
-document.getElementById("examWord").innerText = "Examen terminado"
-
-document.getElementById("examResult").innerHTML =
-`<button onclick="startExam()">🔁 Reiniciar examen</button>`
-
+if(examQuestion>=examTotal){
+document.getElementById("examWord").innerText="Examen terminado"
+document.getElementById("examResult").innerHTML=`<button onclick="startExam()">Reiniciar</button>`
 return
 }
 
 examQuestion++
 
-let randomIndex = Math.floor(Math.random() * words.length)
+let w = words[Math.floor(Math.random()*words.length)]
+currentExamIndex = words.indexOf(w)
 
-currentExamIndex = randomIndex
-
-let word = words[randomIndex]
-
-if(Math.random() < 0.5){
-
-examMode = "en-es"
-document.getElementById("examWord").innerText = word.phrase
-
+if(Math.random()<0.5){
+examMode="en-es"
+document.getElementById("examWord").innerText = w.phrase
 }else{
-
-examMode = "es-en"
-
-let translations = word.translation.split(",")
-
-let randomTranslation = translations[Math.floor(Math.random()*translations.length)]
-
-document.getElementById("examWord").innerText = randomTranslation.trim()
-
+examMode="es-en"
+let t = w.translation.split(",")
+document.getElementById("examWord").innerText = t[Math.floor(Math.random()*t.length)].trim()
 }
 
-document.getElementById("examCounter").innerText =
-"Pregunta " + examQuestion + " de " + examTotal
-
-
-// LIMPIAR CAMPOS AL CAMBIAR PREGUNTA
-
-document.getElementById("examAnswer").value = ""
-
-document.getElementById("examResult").innerHTML = ""
-
-document.getElementById("pronunciationResult").innerHTML = ""
-
-document.getElementById("stats").innerHTML = ""
-
+document.getElementById("examAnswer").value=""
+document.getElementById("examResult").innerHTML=""
+document.getElementById("pronunciationResult").innerHTML=""
+document.getElementById("stats").innerHTML=""
 }
 
 // =============================
-// VERIFICAR EXAMEN
+// VALIDACION CORREGIDA
 // =============================
-
-function limpiarTexto(texto){
-
-return texto
-.toLowerCase()
-.replace(/[.,!?;:¿¡]/g,"")
-.trim()
-
-}
-
 function checkExam(){
 
-let userAnswer = document.getElementById("examAnswer").value.toLowerCase().trim()
+let user = limpiarTexto(document.getElementById("examAnswer").value)
+let w = words[currentExamIndex]
 
-let word = words[currentExamIndex]
+let correct=false
 
-let correct = false
-
-if(examMode === "en-es"){
-
-let correctAnswers = word.translation.toLowerCase().split(",")
-
-correct = correctAnswers.some(ans => ans.trim() === userAnswer)
-
+if(examMode==="en-es"){
+correct = w.translation.split(",").some(a=>limpiarTexto(a)===user)
 }else{
-
-correct = userAnswer === word.phrase.toLowerCase()
-
+correct = limpiarTexto(w.phrase)===user
 }
 
-if(correct){
-word.correct++
-totalCorrect++
-streak++
-}else{
-word.wrong++
-totalWrong++
-streak = 0
-}
+if(correct){ totalCorrect++; streak++ }
+else{ totalWrong++; streak=0 }
 
-let total = totalCorrect + totalWrong
-let accuracy = total > 0 ? Math.round((totalCorrect/total)*100) : 0
+let total = totalCorrect+totalWrong
+let acc = total>0 ? Math.round((totalCorrect/total)*100):0
 
-document.getElementById("examResult").innerHTML = `
-${correct ? "✅ Correcto" : "❌ Incorrecto"}<br><br>
-📊 Correctas: ${totalCorrect} |
-❌ Incorrectas: ${totalWrong} |
-🎯 Precisión: ${accuracy}% |
-🔥 Racha: ${streak}
+document.getElementById("examResult").innerHTML=`
+${correct?"✅ Correcto":"❌ Incorrecto"}<br>
+📊 ${totalCorrect} | ❌ ${totalWrong} | 🎯 ${acc}% | 🔥 ${streak}
 `
-
-localStorage.setItem("words", JSON.stringify(words))
-
 }
 
 // =============================
-// PRUEBA DE PRONUNCIACION
+// VOZ
 // =============================
-
 function startPronunciationTest(){
 
-let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+let rec = new (window.SpeechRecognition||window.webkitSpeechRecognition)()
+rec.lang="en-US"
+rec.start()
 
-if(!SpeechRecognition){
-alert("Tu navegador no soporta reconocimiento de voz")
-return
-}
+rec.onresult = e=>{
+let spoken = limpiarTexto(e.results[0][0].transcript)
+let correct = limpiarTexto(words[currentExamIndex].phrase)
 
-let recognition = new SpeechRecognition()
-
-recognition.lang = "en-US"
-recognition.interimResults = false
-
-recognition.start()
-
-recognition.onresult = function(event){
-
-let spoken = event.results[0][0].transcript.toLowerCase().trim()
-
-let correct = words[currentExamIndex].phrase.toLowerCase().trim()
-
-let result = document.getElementById("pronunciationResult")
-
-if(spoken === correct){
-
+if(spoken===correct){
 pronunciationCorrect++
-
-result.innerHTML = "🎤 Pronunciación correcta"
-
+document.getElementById("pronunciationResult").innerText="🎤 Correcto"
 }else{
-
 pronunciationWrong++
-
-result.innerHTML =
-`⚠️ Dijiste: <b>${spoken}</b><br>
-✔ Correcto: <b>${correct}</b>`
-
+document.getElementById("pronunciationResult").innerText="⚠️ Incorrecto"
 }
 
-updatePronunciationStats()
+let total = pronunciationCorrect+pronunciationWrong
+let acc = Math.round((pronunciationCorrect/total)*100)
 
+document.getElementById("stats").innerText=
+`🎤 ${pronunciationCorrect} | ⚠️ ${pronunciationWrong} | ${acc}%`
 }
-
-recognition.onerror = function(){
-alert("No se pudo reconocer la voz")
-}
-
 }
 
 // =============================
-// ESTADISTICAS DE VOZ
+// PWA
 // =============================
-
-function updatePronunciationStats(){
-
-let total = pronunciationCorrect + pronunciationWrong
-
-let accuracy = total > 0
-? Math.round((pronunciationCorrect / total) * 100)
-: 0
-
-document.getElementById("stats").innerHTML =
-
-`🎤 Pronunciación correcta: ${pronunciationCorrect}
- | ⚠️ Pronunciación incorrecta: ${pronunciationWrong}
- | 🎧 Precisión voz: ${accuracy}%`
-
-} 
-
 if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("PWA lista"))
-    .catch(err => console.log("Error SW:", err))
+navigator.serviceWorker.register("service-worker.js")
 }
-let deferredPrompt = null;
 
-window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
+let deferredPrompt
 
-    deferredPrompt = e;
+window.addEventListener("beforeinstallprompt", e=>{
+e.preventDefault()
+deferredPrompt=e
+document.getElementById("installBtn").style.display="block"
+})
 
-    const installBtn = document.getElementById("installBtn");
-
-    if(installBtn){
-        installBtn.style.display = "inline-block";
-    }
-});
-
-document.getElementById("installBtn")?.addEventListener("click", async () => {
-
-    if(!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-
-    await deferredPrompt.userChoice;
-
-    deferredPrompt = null;
-
-    document.getElementById("installBtn").style.display = "none";
-
-});
+document.getElementById("installBtn")?.addEventListener("click",()=>{
+if(deferredPrompt){
+deferredPrompt.prompt()
+deferredPrompt=null
+}
+})
